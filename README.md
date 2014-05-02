@@ -6,13 +6,13 @@ Get_elements_from_web_and_caching
 This project uses the guidelines detailed [in this repository] (https://github.com/Vierco/android_guidelines)   
 This example is using a response in XML format   
 
-<answer>
+> <answer>
 
-<item>
-<title>Commodore Amiga 500</title>
-<subtitle>Year 1987</subtitle>
-<image>http://muzeum.sosvel.cz/catalog/image/cache/data/Commodore/772px-Amiga500_system-500x500.jpeg</image>
-</item>
+> <item>
+> <title>Commodore Amiga 500</title>
+> <subtitle>Year 1987</subtitle>
+> <image>http://muzeum.sosvel.cz/catalog/image/cache/data/Commodore/772px-Amiga500_system-500x500.jpeg</image>
+> </item>
 
 <item>
 <title>Atari 520STfm</title>
