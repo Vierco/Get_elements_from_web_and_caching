@@ -12,7 +12,7 @@ Requires Android. 2.3 and up
 
 ![Alt text](http://www.hellovierco.com/Daleks/github_template_connect.jpg "Optional title")   
 
-Sergio Alvarez @Vierco - 2014   
+Sergio Alvarez [@Vierco] (http://www.twitter.com/vierco) - 2014   
 
 
 
