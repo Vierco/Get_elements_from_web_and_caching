@@ -1,0 +1,7 @@
+INDEX VERSION 1.126+/Users/Sergio/Hello Vierco/Aplicaciones/Proyectos/Guidelines_template/.metadata/.plugins/org.eclipse.jdt.core
+3705544464.index
+1270315800.index
+858397291.index
+1224972598.index
+2170676802.index
+2195122474.index

@@ -1,0 +1,110 @@
+package vierco.com.example.template;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import android.app.Activity;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class Adapter_List extends BaseAdapter {
+
+	private int mLastPosition = -1;
+
+	private Activity activity;
+	private ArrayList<HashMap<String, String>> data;
+	private static LayoutInflater inflater=null;
+	public ImageLoader imageLoader; 
+	String separator = System.getProperty ("line.separator");
+
+
+	public Adapter_List(Activity a, ArrayList<HashMap<String, String>> d) {
+		activity = a;
+		data=d;
+		inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		imageLoader=new ImageLoader(activity.getApplicationContext());
+	}
+
+	public int getCount() {
+		return data.size();
+	}
+
+	public Object getItem(int position) {
+		return position;
+	}
+
+	public long getItemId(int position) {
+		return position;
+	}
+
+	private class ViewHolder { 
+		ImageView image_row;
+		TextView title; 
+		TextView subtitle; 
+
+
+
+		public View getView(int position, View convertView, ViewGroup parent) {
+			ViewHolder holder = null;
+			View vi=convertView;
+
+
+
+			if(convertView==null) {
+				vi = inflater.inflate(R.layout.row_list, null);
+				holder = new ViewHolder();
+
+				holder.image_row=(ImageView)vi.findViewById(R.id.IMV_imageRow);
+				holder.title = (TextView)vi.findViewById(R.id.TXV_title);
+				holder.subtitle = (TextView)vi.findViewById(R.id.TXV_subtitle);
+
+				vi .setTag(holder);
+
+			}
+			else
+				holder = (ViewHolder) vi.getTag();
+
+			HashMap<String, String> items = new HashMap<String, String>();
+			items = data.get(position);
+
+			try { 
+				String textentrie = new String(items.get(Hello.KEY_TITLE).getBytes("UTF-8"));
+				textentrie=textentrie.replaceAll("<br>",separator);
+				holder.title.setText(textentrie);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();}
+			try { 
+				String textentrie = new String(items.get(Hello.KEY_SUBTITLE).getBytes("UTF-8"));
+				textentrie=textentrie.replaceAll("<br>",separator);
+				holder.subtitle.setText(textentrie);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();}
+
+			imageLoader.DisplayImage(items.get(Hello.KEY_IMAGE), holder.image_row);
+
+
+			TranslateAnimation animation = null;
+			if (position > mLastPosition) {
+				animation = new TranslateAnimation(
+						Animation.RELATIVE_TO_SELF,
+						0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+						Animation.RELATIVE_TO_SELF, 1.0f,
+						Animation.RELATIVE_TO_SELF, 0.0f);
+
+				animation.setDuration(600);
+				vi.startAnimation(animation);
+				mLastPosition = position;
+			}
+
+			return vi;
+		}
+	}
+}

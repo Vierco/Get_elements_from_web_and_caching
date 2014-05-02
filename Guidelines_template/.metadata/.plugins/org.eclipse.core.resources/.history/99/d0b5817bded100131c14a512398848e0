@@ -1,0 +1,117 @@
+package vierco.com.example.template;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import android.app.Activity;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class Adapter_List extends BaseAdapter {
+	
+	private int mLastPosition = -1;
+
+	private Activity activity;
+	private ArrayList<HashMap<String, String>> data;
+	private static LayoutInflater inflater=null;
+	public ImageLoader imageLoader; 
+	String separator = System.getProperty ("line.separator");
+
+
+	public Adapter_List(Activity a, ArrayList<HashMap<String, String>> d) {
+		activity = a;
+		data=d;
+		inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		imageLoader=new ImageLoader(activity.getApplicationContext());
+	}
+
+	public int getCount() {
+		return data.size();
+	}
+
+	public Object getItem(int position) {
+		return position;
+	}
+
+	public long getItemId(int position) {
+		return position;
+	}
+
+	private class ViewHolder { 
+		ImageView avatar;
+		TextView autor; 
+		TextView articulos; 
+		TextView ultimo; 
+	}
+
+
+	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder holder = null;
+		View vi=convertView;
+		
+	  
+
+		if(convertView==null) {
+			vi = inflater.inflate(R.layout.row_autores, null);
+			holder = new ViewHolder();
+
+			holder.avatar=(ImageView)vi.findViewById(R.id.avatar);
+			holder.autor = (TextView)vi.findViewById(R.id.autor);
+			holder.articulos = (TextView)vi.findViewById(R.id.articulos);
+			holder.ultimo = (TextView)vi.findViewById(R.id.ultimo);
+
+			vi .setTag(holder);
+			
+		}
+		else
+			holder = (ViewHolder) vi.getTag();
+
+		HashMap<String, String> items = new HashMap<String, String>();
+		items = data.get(position);
+
+		try { 
+			String textentrie = new String(items.get(FRG_autores.KEY_NOMBRE_AUTOR).getBytes("UTF-8"));
+			textentrie=textentrie.replaceAll("<br>",separator);
+			holder.autor.setText(textentrie);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();}
+		try { 
+			String textentrie = new String(items.get(FRG_autores.KEY_ARTICULOS_AUTOR).getBytes("UTF-8"));
+			textentrie=textentrie.replaceAll("<br>",separator);
+			holder.articulos.setText(textentrie);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();}
+		try { 
+			String textentrie = new String(items.get(FRG_autores.KEY_ULTIMO_AUTOR).getBytes("UTF-8"));
+			textentrie=textentrie.replaceAll("<br>",separator);
+			holder.ultimo.setText(textentrie);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();}
+
+		imageLoader.DisplayImage(items.get(FRG_autores.KEY_AVATAR_AUTOR), holder.avatar);
+		
+		// Entradas de las noticias
+        TranslateAnimation animation = null;
+        if (position > mLastPosition) {
+            animation = new TranslateAnimation(
+                Animation.RELATIVE_TO_SELF,
+                0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 1.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f);
+
+            animation.setDuration(600);
+            vi.startAnimation(animation);
+            mLastPosition = position;
+        }
+        
+		return vi;
+	}
+}

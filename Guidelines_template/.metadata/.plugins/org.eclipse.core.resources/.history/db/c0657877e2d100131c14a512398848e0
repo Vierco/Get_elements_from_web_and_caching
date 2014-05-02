@@ -1,0 +1,232 @@
+package vierco.com.example.template;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+
+
+public class Hello extends ActionBarActivity {
+
+	String xml;
+	ArrayList<HashMap<String, String>> myElementsList;
+	HashMap<String, String> map;
+	Adapter_List adapter;
+
+	String KEY_ITEM="item";
+	public static String KEY_TITLE="title";
+	public static String KEY_SUBTITLE="subtitle";
+	public static String KEY_IMAGE="image";
+
+	HttpResponse response;
+	HttpClient httpClient;
+	HttpPost request;
+	StringBuffer stringBuffer;
+	List<NameValuePair> postParameters;
+	BufferedReader bufferedReader = null;
+
+	Button btn_connect;
+	ListView listv_myList;
+	ProgressBar pbar_parsing;
+
+	// Asynctask connection
+	public class parseList extends AsyncTask<String, Void, String>{
+
+
+		public String doInBackground(String... urls){
+
+			httpClient = new DefaultHttpClient();
+			request = new HttpPost("http://www.hellovierco.com/Daleks/github_template_caching.xml");
+			postParameters = new ArrayList<NameValuePair>();
+
+			try {
+				UrlEncodedFormEntity entity = new UrlEncodedFormEntity(postParameters);
+				request.setEntity(entity);
+
+				HttpResponse response= httpClient.execute(request);
+
+				bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+				stringBuffer = new StringBuffer("");
+				String line = "";
+				String LineSeparator = System.getProperty("line.separator");
+				while ((line = bufferedReader.readLine()) != null) {
+					stringBuffer.append(line + LineSeparator); 
+				}
+				bufferedReader.close();
+
+			} catch (ClientProtocolException e) {
+
+				e.printStackTrace();
+
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}finally{
+				if (bufferedReader != null){
+					try {
+						bufferedReader.close();
+					} catch (IOException e) {
+
+						e.printStackTrace();
+					}
+				}
+			}
+
+			return xml;
+		}
+
+		public void onPostExecute(String xml){
+
+			xml=stringBuffer.toString();
+			try {
+				myElementsList = new ArrayList<HashMap<String, String>>();
+
+				Document doc = getDomElement(xml); 
+
+				NodeList nl0 = doc.getElementsByTagName(KEY_ITEM);
+				for (int i = 0; i < nl0.getLength(); i++) {
+					map = new HashMap<String, String>();
+					Element e = (Element) nl0.item(i);
+
+					map.put(KEY_TITLE, getValue(e, KEY_TITLE));
+					map.put(KEY_SUBTITLE, getValue(e, KEY_SUBTITLE));
+					map.put(KEY_IMAGE, getValue(e, KEY_IMAGE));
+
+					myElementsList.add(map);
+				}
+				assignAdapter();
+
+			} catch (Exception e) {
+
+			}	
+
+		}	
+	} 
+
+	public void assignAdapter() {
+
+		adapter=new Adapter_List(this, myElementsList);        
+		listv_myList.setAdapter(adapter);
+
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.hello);
+
+		btn_connect = (Button) findViewById(R.id.BT_connect);
+		listv_myList = (ListView) findViewById(R.id.LISTV_myList);
+		pbar_parsing = (ProgressBar) findViewById(R.id.PBAR_parsing);
+
+		
+		// Listeners
+		btn_connect.setOnClickListener(new View.OnClickListener(){ 
+			public void onClick(View view){ 
+				new parseList().execute();
+			}
+		});
+
+	}
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		getMenuInflater().inflate(R.menu.hello, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	/////////////////////////////////////////////////////
+
+	// MŽtodos de la llamada al WS
+
+	public Document getDomElement(String xml){
+		Document doc = null;
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		try {
+
+			DocumentBuilder db = dbf.newDocumentBuilder();
+
+			InputSource is = new InputSource();
+			is.setCharacterStream(new StringReader(xml));
+			doc = db.parse(is); 
+
+		} catch (ParserConfigurationException e) {
+			Log.e("Error: ", e.getMessage());
+			return null;
+		} catch (SAXException e) {
+			Log.e("Error: ", e.getMessage());
+			return null;
+		} catch (IOException e) {
+			Log.e("Error: ", e.getMessage());
+			return null;
+		}
+
+		return doc;
+	}
+
+	public String getValue(Element item, String str) {		
+		NodeList n = item.getElementsByTagName(str);		
+		return this.getElementValue(n.item(0));
+	}
+
+	public final String getElementValue( Node elem ) {
+		Node child;
+		if( elem != null){
+			if (elem.hasChildNodes()){
+				for( child = elem.getFirstChild(); child != null; child = child.getNextSibling() ){
+					if( child.getNodeType() == Node.TEXT_NODE || child.getNodeType() == Node.CDATA_SECTION_NODE ){
+						return child.getNodeValue();
+					}
+				}
+			}
+		}
+		return "";
+	}
+
+}
+
+

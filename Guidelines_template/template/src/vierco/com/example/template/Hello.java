@@ -1,0 +1,187 @@
+package vierco.com.example.template;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import methods.XMLParser;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import adapters.Adapter_List;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+
+
+public class Hello extends ActionBarActivity {
+
+	String xml;
+	ArrayList<HashMap<String, String>> myElementsList;
+	HashMap<String, String> map;
+	Adapter_List adapter;
+
+	String KEY_ITEM="item";
+	public static String KEY_TITLE="title";
+	public static String KEY_SUBTITLE="subtitle";
+	public static String KEY_IMAGE="image";
+
+	HttpResponse response;
+	HttpClient httpClient;
+	HttpPost request;
+	StringBuffer stringBuffer;
+	List<NameValuePair> postParameters;
+	BufferedReader bufferedReader = null;
+
+	Button btn_connect;
+	ListView listv_myList;
+	ProgressBar pbar_parsing;
+
+	// Asynctask connection
+	public class parseList extends AsyncTask<String, Void, String>{
+
+		protected void onPreExecute() {
+
+			pbar_parsing.setVisibility(View.VISIBLE);
+
+		}
+
+		public String doInBackground(String... urls){
+
+			httpClient = new DefaultHttpClient();
+			request = new HttpPost("http://www.hellovierco.com/Daleks/github_template_caching.xml");
+			postParameters = new ArrayList<NameValuePair>();
+
+			try {
+				UrlEncodedFormEntity entity = new UrlEncodedFormEntity(postParameters);
+				request.setEntity(entity);
+
+				HttpResponse response= httpClient.execute(request);
+
+				bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+				stringBuffer = new StringBuffer("");
+				String line = "";
+				String LineSeparator = System.getProperty("line.separator");
+				while ((line = bufferedReader.readLine()) != null) {
+					stringBuffer.append(line + LineSeparator); 
+				}
+				bufferedReader.close();
+
+			} catch (ClientProtocolException e) {
+
+				e.printStackTrace();
+
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}finally{
+				if (bufferedReader != null){
+					try {
+						bufferedReader.close();
+					} catch (IOException e) {
+
+						e.printStackTrace();
+					}
+				}
+			}
+
+			return xml;
+		}
+
+		public void onPostExecute(String xml){
+
+			xml=stringBuffer.toString();
+			XMLParser parser = new XMLParser();
+			try {
+				myElementsList = new ArrayList<HashMap<String, String>>();
+
+				Document doc = parser.getDomElement(xml); 
+
+				NodeList nl0 = doc.getElementsByTagName(KEY_ITEM);
+				for (int i = 0; i < nl0.getLength(); i++) {
+					map = new HashMap<String, String>();
+					Element e = (Element) nl0.item(i);
+
+					map.put(KEY_TITLE, parser.getValue(e, KEY_TITLE));
+					map.put(KEY_SUBTITLE, parser.getValue(e, KEY_SUBTITLE));
+					map.put(KEY_IMAGE, parser.getValue(e, KEY_IMAGE));
+
+					myElementsList.add(map);
+				}
+				assignAdapter();
+				pbar_parsing.setVisibility(View.GONE);
+
+			} catch (Exception e) {
+
+			}	
+
+		}	
+	} 
+
+	public void assignAdapter() {
+
+		adapter=new Adapter_List(this, myElementsList);        
+		listv_myList.setAdapter(adapter);
+
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.hello);
+
+		btn_connect = (Button) findViewById(R.id.BT_connect);
+		listv_myList = (ListView) findViewById(R.id.LISTV_myList);
+		pbar_parsing = (ProgressBar) findViewById(R.id.PBAR_parsing);
+
+
+		// Listeners
+		btn_connect.setOnClickListener(new View.OnClickListener(){ 
+			public void onClick(View view){ 
+				new parseList().execute();
+			}
+		});
+
+	}
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		getMenuInflater().inflate(R.menu.hello, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+
+
+}
+
+
