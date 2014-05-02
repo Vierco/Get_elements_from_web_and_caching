@@ -10,5 +10,9 @@ This example is using a response in XML format
 
 Requires Android. 2.3 and up   
 
-![Alt text](http://www.hellovierco.com/Daleks/github_template_connect.jpg "Optional title")
+![Alt text](http://www.hellovierco.com/Daleks/github_template_connect.jpg "Optional title")   
+
+Sergio Alvarez @Vierco - 2014   
+
+
 
