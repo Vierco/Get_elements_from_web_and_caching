@@ -20,8 +20,7 @@ For your test xml:
 Requires Android. 2.3 and up   
 
 
-Sergio Alvarez- [in this repository](https://github.com/Vierco/android_guidelines)
-  - 2014   
+Sergio Alvarez- [Vierco](https://www.twitter.com/Vierco) - 2014   
 
 
 
