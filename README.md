@@ -1,7 +1,10 @@
-Get elements from web and caching
+##Get elements from web and caching
+**Caching data - android project example**
 =================================
 
-**Caching data - android project example**
+** An old and dear example
+
+
 
 This project uses the guidelines detailed [in this repository](https://github.com/Vierco/android_guidelines)
  
