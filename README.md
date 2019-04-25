@@ -1,7 +1,7 @@
-# Get elements from web and caching
-## An old and dear android project example
-
 This project uses the guidelines detailed [in this repository](https://github.com/Vierco/android_guidelines)
+
+# Get elements from web and caching
+An old and dear android project example
  
 This example is using a response in XML format   
 
@@ -18,7 +18,7 @@ For your test xml:
 Requires Android. 2.3 and up   
 
 
-Sergio Alvarez- [Vierco](https://www.twitter.com/Vierco) - 2014   
+Sergio Alvarez- [Vierco](https://www.twitter.com/Vierco) - **2014**   
 
 
 
