@@ -1,8 +1,8 @@
-##Get elements from web and caching
-**Caching data - android project example**
+## Get elements from web and caching
+** Caching data - android project example**
 =================================
 
-** An old and dear example
+**An old and dear example
 
 
 
