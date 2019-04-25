@@ -3,7 +3,7 @@ Get elements from web and caching
 
 **Caching data - android project example**
 
-This project uses the guidelines detailed [Contribution guidelines for this project](https://github.com/Vierco/android_guidelines)
+This project uses the guidelines detailed [in this repository](https://github.com/Vierco/android_guidelines)
  
 This example is using a response in XML format   
 
