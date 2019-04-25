@@ -7,20 +7,21 @@ This project uses the guidelines detailed [in this repository](https://github.co
  
 This example is using a response in XML format   
 
-- For your test xml:
+For your test xml:
 
-Object = "item";
+- Object = "item";
 
-Attribute KEY_TITLE="title";
+- Attribute KEY_TITLE="title";
 
-Attribute KEY_SUBTITLE="subtitle";
+- Attribute KEY_SUBTITLE="subtitle";
 
-Attribute KEY_IMAGE="image";
+- Attribute KEY_IMAGE="image";
 
 Requires Android. 2.3 and up   
 
 
-Sergio Alvarez [@Vierco] (http://www.twitter.com/vierco) - 2014   
+Sergio Alvarez- [in this repository](https://github.com/Vierco/android_guidelines)
+  - 2014   
 
 
 
