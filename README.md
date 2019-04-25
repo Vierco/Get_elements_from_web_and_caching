@@ -18,7 +18,7 @@ For your test xml:
 Requires Android. 2.3 and up   
 
 
-Sergio Alvarez- [Vierco](https://www.twitter.com/Vierco) - **2014**   
+With love - **2014**   
 
 
 
