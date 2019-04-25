@@ -6,7 +6,9 @@ Get_elements_from_web_and_caching
 This project uses the guidelines detailed [in this repository] (https://github.com/Vierco/android_guidelines)   
 This example is using a response in XML format   
 
-- [answer] (http://www.hellovierco.com/Daleks/github_template_caching.xml)
+- For your test xml:
+
+
 
 Requires Android. 2.3 and up   
 
